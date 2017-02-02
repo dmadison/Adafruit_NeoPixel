@@ -16,12 +16,36 @@ void setup() {
   getPixelTest(stripRGB, 0xFF000000);
   getPixelTest(stripRGB, 0xDD00DD00);
   getPixelTest(stripRGB, 0xAAAA0000);
+  getPixelSpeed(stripRGB, 1000000);
 
   Serial.println("Testing: RGBW Strip");
   getPixelTest(stripRGBW, 0xFF000000);
   getPixelTest(stripRGBW, 0xDD00DD00);
   getPixelTest(stripRGBW, 0xAAAA0000);
+  getPixelSpeed(stripRGBW, 1000000);
+}
 
+void getPixelSpeed(Adafruit_NeoPixel &strip, uint32_t numTests){
+  static unsigned long startTime, endTime;
+  uint32_t tempColor;
+  
+  for(int i = 0; i < NUM_LEDS; i++){
+    strip.setPixelColor(i, random(0, 256), random(0, 256), random(0, 256));
+  }
+  
+  startTime = millis();
+  for(uint32_t i = 0; i < numTests; i++){
+    tempColor = strip.getPixelColor(random(0, NUM_LEDS));
+  }
+  endTime = millis();
+
+  Serial.print("Total Time: ");
+  Serial.println(endTime - startTime);
+  Serial.print("Number of Iterations: ");
+  Serial.println(numTests);
+  Serial.print("Time per: ");
+  Serial.println((float)(endTime - startTime) / numTests);
+  Serial.println();
 }
 
 void getPixelTest(Adafruit_NeoPixel &strip, uint32_t colorSet){
